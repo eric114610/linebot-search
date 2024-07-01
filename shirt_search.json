@@ -1,0 +1,32 @@
+{
+    "size": 2,
+    "query": {
+      "knn": {
+        "item_vector": {
+          "vector": [
+            2, 4, 3
+          ],
+          "k": 10,
+          "filter": {
+            "bool": {
+              "must": [
+                {
+                  "range": {
+                    "rating": {
+                      "gte": 7,
+                      "lte": 10
+                    }
+                  }
+                },
+                {
+                  "term": {
+                    "size": "small"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }

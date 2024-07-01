@@ -1,0 +1,24 @@
+{ "index": { "_index": "products-shirts", "_id": "1" } }
+{ "item_vector": [5.2, 4.4, 8.4], "size" : "large", "rating" : 5 }
+{ "index": { "_index": "products-shirts", "_id": "2" } }
+{ "item_vector": [5.2, 3.9, 2.9], "size" : "small", "rating" : 4 }
+{ "index": { "_index": "products-shirts", "_id": "3" } }
+{ "item_vector": [4.9, 3.4, 2.2], "size" : "xlarge", "rating" : 9 }
+{ "index": { "_index": "products-shirts", "_id": "4" } }
+{ "item_vector": [4.2, 4.6, 5.5], "size" : "large", "rating" : 6}
+{ "index": { "_index": "products-shirts", "_id": "5" } }
+{ "item_vector": [3.3, 4.5, 8.8], "size" : "medium", "rating" : 8 }
+{ "index": { "_index": "products-shirts", "_id": "6" } }
+{ "item_vector": [6.4, 3.4, 6.6], "size" : "small", "rating" : 9 }
+{ "index": { "_index": "products-shirts", "_id": "7" } }
+{ "item_vector": [4.2, 6.2, 4.6], "size" : "small", "rating" : 5 }
+{ "index": { "_index": "products-shirts", "_id": "8" } }
+{ "item_vector": [2.4, 4.0, 3.0], "size" : "small", "rating" : 8 }
+{ "index": { "_index": "products-shirts", "_id": "9" } }
+{ "item_vector": [1.4, 3.2, 9.0], "size" : "small", "rating" : 5 }
+{ "index": { "_index": "products-shirts", "_id": "10" } }
+{ "item_vector": [7.0, 9.9, 9.0], "size" : "xlarge", "rating" : 9 }
+{ "index": { "_index": "products-shirts", "_id": "11" } }
+{ "item_vector": [3.0, 2.3, 2.0], "size" : "large", "rating" : 6 }
+{ "index": { "_index": "products-shirts", "_id": "12" } }
+{ "item_vector": [5.0, 1.0, 4.0], "size" : "large", "rating" : 3 }
