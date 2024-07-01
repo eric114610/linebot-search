@@ -8,7 +8,14 @@
 </head>
 <body>
   <h1>Movie Search</h1>
-  <input id="search" autocomplete="off" placeholder="Search">
+  <input id="search" autocomplete="off" placeholder="index">
+  <input id="search2" autocomplete="off" placeholder="message">
+  <input id="search3" autocomplete="off" placeholder="embedding">
+  <input id="search4" autocomplete="off" placeholder="id">
+  <button type="button" onclick="myGet()">Get</button>
+  <button type="button" onclick="myPost()">Post</button>
+  <button type="button" onclick="myPut()">Put</button>
+
   <div id="results"></div>
   <p id="noresults">No results. Try another search term.</p>
   <p id="loading">Getting results...</p>

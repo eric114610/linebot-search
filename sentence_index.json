@@ -1,0 +1,16 @@
+{
+    "settings": {
+       "index.knn": true
+    },
+    "mappings": {
+       "properties": {
+          "embedding": {
+             "type": "knn_vector",
+             "dimension": 3
+          },
+          "message": {
+             "type": "text"
+          }
+       }
+    }
+}
