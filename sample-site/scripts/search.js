@@ -1,5 +1,5 @@
 // Update this variable to point to your domain.
-var apigatewayendpoint = 'https://o0p2k383h8.execute-api.ap-northeast-3.amazonaws.com/opensearch-api-test/';
+var apigatewayendpoint = 'https://10p2k383h8.execute-api.ap-northeast-3.amazonaws.com/opensearch-api-test/';
 var loadingdiv = $('#loading');
 var noresults = $('#noresults');
 var resultdiv = $('#results');

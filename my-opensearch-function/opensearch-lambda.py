@@ -3,6 +3,8 @@ import json
 import requests
 from requests_aws4auth import AWS4Auth
 
+import ast
+
 region = 'ap-northeast-3' # For example, us-west-1
 service = 'es'
 credentials = boto3.Session().get_credentials()
@@ -56,22 +58,11 @@ def lambda_handler(event, context):
   #     }
   #   }
   # }
-    query = {
-      "size": 2,
-      "query": {
-        "knn": {
-          "embedding": {
-            "vector": [
-              2, 4, 3
-            ],
-            "k": 10
-          }
-        }
-      }
-    }
+
+    # print(ast.literal_eval(event['queryStringParameters']['embedding']))
     
     # test_index = '{"settings": {"index": {"knn": true}},"mappings": {"properties": {"item_vector": {"type": "knn_vector","dimension": 3,"method": {"name": "hnsw","space_type": "l2","engine": "faiss"}}}}}'
-    test_index = """{
+    Gropu_index = """{
     "settings": {
        "index.knn": true
     },
@@ -79,16 +70,54 @@ def lambda_handler(event, context):
        "properties": {
           "embedding": {
              "type": "knn_vector",
-             "dimension": 3
+             "dimension": 3,
+             "method": {
+             "name": "hnsw",
+             "space_type": "l2",
+             "engine": "faiss"
+             }
           },
           "message": {
+             "type": "text"
+          },
+          "date": {
+             "type": "date",
+             "format": "yyyy-MM-dd HH:mm:ss||strict_date_time_no_millis||strict_date_optional_time||epoch_millis"
+          },
+          "user": {
              "type": "text"
           }
        }
     }
 }"""
+
+    User_index = """{
+    "settings": {
+       "index.knn": true
+    },
+    "mappings": {
+       "properties": {
+          "embedding": {
+             "type": "knn_vector",
+             "dimension": 3,
+             "method": {
+             "name": "hnsw",
+             "space_type": "l2",
+             "engine": "faiss"
+             }
+          },
+          "date": {
+             "type": "date",
+             "format": "yyyy-MM-dd HH:mm:ss||strict_date_time_no_millis||strict_date_optional_time||epoch_millis"
+          },
+          "date_before": {
+             "type": "date",
+             "format": "yyyy-MM-dd HH:mm:ss||strict_date_time_no_millis||strict_date_optional_time||epoch_millis"
+          }
+       }
+    }
+}"""
     
-    data = json.loads(test_index)
     # post_item = '{ "item_vector": [6.4, 3.4, 6.6], "size" : "small", "rating" : 9 }'
     # print(post_item)
     # # data_post = json.loads(post_item)
@@ -105,11 +134,104 @@ def lambda_handler(event, context):
     
     # Elasticsearch 6.x requires an explicit Content-Type header
     headers = { "Content-Type": "application/json" }
-    if(event['queryStringParameters']['type'] == "Get"):
+    if(event['queryStringParameters']['type'] == "GetMessage"):
+        if(event['queryStringParameters']['user'] == 'Admin'):
+            query = {
+            "size": 2,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "knn": {
+                                "embedding": {
+                                    "vector": ast.literal_eval(event['queryStringParameters']['embedding']),
+                                    "k": 10
+                                }
+                            }
+                        },
+                        {
+                            "range": {
+                                "date": {
+                                    "gte": event['queryStringParameters']['date'],
+                                    "lte": event['queryStringParameters']['date_before'],
+                                    "format": "yyyy-MM-dd HH:mm:ss"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        else:
+            query = {
+            "size": 2,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "knn": {
+                                "embedding": {
+                                    "vector": ast.literal_eval(event['queryStringParameters']['embedding']),
+                                    "k": 10
+                                }
+                            }
+                        },
+                        {
+                            "range": {
+                                "date": {
+                                    "gte": event['queryStringParameters']['date'],
+                                    "lte": "2025-12-31 23:59:59",
+                                    "format": "yyyy-MM-dd HH:mm:ss"
+                                }
+                            }
+                        },
+                        {
+                            "match": {
+                                "user": {
+                                    "query": event['queryStringParameters']['user'],
+                                    "operator": "and"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        # query = {
+        #     "query": {
+        #         "term": {
+        #             "_id": event['queryStringParameters']['id']
+        #         }
+        #     }
+        # }
+        
         r = requests.get(url, auth=awsauth, headers=headers, data=json.dumps(query))
-    elif(event['queryStringParameters']['type'] == "Post"):
+    elif(event['queryStringParameters']['type'] == "GetUser"):
+        query = {
+            "query": {
+                "term": {
+                    "_id": event['queryStringParameters']['id']
+                }
+            }
+        }
+        
+        r = requests.get(url, auth=awsauth, headers=headers, data=json.dumps(query))
+    elif(event['queryStringParameters']['type'] == "PostMessage"):
+        post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "message": "' + event['queryStringParameters']['message'] + '", "date": "' + event['queryStringParameters']['date'] + '", "user": "' + event['queryStringParameters']['user'] + '"}'
+        # post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "date": "' + event['queryStringParameters']['date'] + '", "date_before": "' + event['queryStringParameters']['date_before'] + '"}'
+        print(post_item)
+        data_post = json.loads(post_item)
+        r = requests.post(url_post + event['queryStringParameters']['id'], auth=awsauth, headers=headers, data=json.dumps(data_post))
+    elif(event['queryStringParameters']['type'] == "PostUser"):
+        post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "date": "' + event['queryStringParameters']['date'] + '", "date_before": "' + event['queryStringParameters']['date_before'] + '"}'
+        print(post_item)
+        data_post = json.loads(post_item)
         r = requests.post(url_post + event['queryStringParameters']['id'], auth=awsauth, headers=headers, data=json.dumps(data_post))
     elif(event['queryStringParameters']['type'] == "Put"):
+        if event['queryStringParameters']['newIndexType'] == "Group":
+            data = json.loads(Gropu_index)
+        if event['queryStringParameters']['newIndexType'] == "User":
+            data = json.loads(User_index)
         r = requests.put(url_index, auth=awsauth, headers=headers, data=json.dumps(data))
     else:
         print("No Re", type(event['queryStringParameters']['type']), event['queryStringParameters']['type'])
