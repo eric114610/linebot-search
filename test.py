@@ -158,5 +158,6 @@ if __name__ == '__main__':
     # updateUserInformation("test-user1", [3,-1.34,-4.12])
     # print(queryMessage("test-user1", "sports"))
     # print(GetUserSetting("test-user1"))
-    # print(GetGruopInfo("sports"))
-    asyncio.run(testasync())
+    re = asyncio.run(GetGruopInfo("sports"))
+    print(re)
+    # asyncio.run(testasync())
