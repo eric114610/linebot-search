@@ -86,6 +86,9 @@ def lambda_handler(event, context):
           },
           "user": {
              "type": "text"
+          },
+          "url": {
+             "type": "text"
           }
        }
     }
@@ -217,7 +220,7 @@ def lambda_handler(event, context):
         
         r = requests.get(url, auth=awsauth, headers=headers, data=json.dumps(query))
     elif(event['queryStringParameters']['type'] == "PostMessage"):
-        post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "message": "' + event['queryStringParameters']['message'] + '", "date": "' + event['queryStringParameters']['date'] + '", "user": "' + event['queryStringParameters']['user'] + '"}'
+        post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "message": "' + event['queryStringParameters']['message'] + '", "date": "' + event['queryStringParameters']['date'] + '", "user": "' + event['queryStringParameters']['user'] + '", "url": "' + event['queryStringParameters']['url'] + '"}'
         # post_item = '{"embedding": ' + event['queryStringParameters']['embedding'] + ', "date": "' + event['queryStringParameters']['date'] + '", "date_before": "' + event['queryStringParameters']['date_before'] + '"}'
         print(post_item)
         data_post = json.loads(post_item)
