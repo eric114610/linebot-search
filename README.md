@@ -2,6 +2,7 @@
 
 ### Note
 currently, use asycn approach to ensure data intergrity, use asyncio.run(your_func()) to run, your_func() also has to be async
+
 if don't need to consider data intergrity, delete all async declare before functions and run normally
 
 ### index structure
@@ -31,6 +32,7 @@ it will first use GetMessageMethod() to get old setting
 
 #### addNewGroup
 requires GroupID, add new index for Group
+
 initially, there's a object with id=1, which is used to keep track of total number of object
 returns bool indicate success
 
