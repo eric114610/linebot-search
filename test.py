@@ -49,7 +49,7 @@ def PostMessageMethod(index, _message, _embedding, _id, _date, _user="Admin", _u
 def PostUserMethod(index, _embedding, _id=1, _date="2024-01-01 00:00:00", _date_before="2025-12-31 11:59:59"):
     params = { "type": "PostUser", "size": 25 , "q": index, "embedding": str(_embedding), "id": _id, "date": _date, "date_before": _date_before}
     r = requests.get(apigatewayendpoint, params)
-    # print(r.text)
+    print(r.text)
     # print(type(params["embedding"]))
     if r.status_code == 200: 
         return True
@@ -59,7 +59,7 @@ def PostUserMethod(index, _embedding, _id=1, _date="2024-01-01 00:00:00", _date_
 def Putmethod(index, newIndexType):
     params = { "type": "Put", "size": 25 , "q": index, "newIndexType": newIndexType}
     r = requests.get(apigatewayendpoint, params)
-    # print(r.text)
+    print(r.text)
     if r.status_code == 200: 
         return True
     else:
@@ -70,15 +70,15 @@ def Putmethod(index, newIndexType):
 # will have extra 1 second delay for syncronize
 
 async def addNewUserInformation(userID, _embedding=[0,0,0], _date="2024-01-01 00:00:00", _date_before="2025-12-31 11:59:59"):
-    Putmethod(userID, "User")
-    if PostUserMethod(userID, _embedding, 1, _date, _date_before):
+    # Putmethod(userID, "User")
+    if PostUserMethod("user-collections", _embedding, userID, _date, _date_before):
         await asyncio.sleep(1)
         return True
     else:
         return False
     
 async def updateUserInformation(userID, _embedding=[0,0,0], _date="2024-01-01 00:00:00", _date_before="2025-12-31 11:59:59"):
-    userSetting = GetUserMethod(userID, 1)
+    userSetting = GetUserMethod("user-collections", userID)
 
     if _embedding == [0,0,0]:
         _embedding = userSetting["embedding"]
@@ -87,7 +87,7 @@ async def updateUserInformation(userID, _embedding=[0,0,0], _date="2024-01-01 00
     if _date_before == "2025-12-31 11:59:59":
         _date_before = userSetting["date_before"]
 
-    if PostUserMethod(userID, _embedding, 1, _date, _date_before):
+    if PostUserMethod("user-collections", _embedding, userID, _date, _date_before):
         await asyncio.sleep(1)
         return True
     else:
@@ -116,12 +116,12 @@ async def addMessage(GroupID, _message, _embedding, _date, _user="Admin", _url="
     return True
 
 async def queryMessage(userID, GroupID, _embedding=[0,0,0], _date="2024-01-01 00:00:00", _user="Admin", _date_before="2025-12-31 11:59:59"):
-    userSetting = GetUserMethod(userID, 1)
+    userSetting = GetUserMethod("user-collections", userID)
     print(userSetting['embedding'])
     return GetMessageMethod(GroupID, userSetting['embedding'], 0, userSetting['date'], _user, userSetting['date_before'])
 
 async def GetUserSetting(userID):
-    return GetUserMethod(userID, 1)
+    return GetUserMethod("user-collections", userID)
 
 async def GetGruopInfo(GruopID):
     return GetMessageMethod(GruopID, [0,0,0], 1)
@@ -162,6 +162,6 @@ if __name__ == '__main__':
     # updateUserInformation("test-user1", [3,-1.34,-4.12])
     # print(queryMessage("test-user1", "sports"))
     # print(GetUserSetting("test-user1"))
-    re = asyncio.run(GetGruopInfo("sports"))
+    re = asyncio.run(GetUserSetting("user1"))
     print(re)
     # asyncio.run(testasync())

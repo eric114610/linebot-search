@@ -6,18 +6,22 @@ currently, use asycn approach to ensure data intergrity, use asyncio.run(your_fu
 if don't need to consider data intergrity, delete all async declare before functions and run normally
 
 ### index structure
-GroupIndex:
-    user (news source?)
-    url
-    message (news)
-    embedding
-    date
+GroupIndex (specify by GroupID):
+    { (specify by id auto assigned)
+        user (news source?)
+        url
+        message (news)
+        embedding
+        date
+    }
 
 UserIndex:
-    embedding (768, currently for testing only 3)
-    date
-    date_before
-    (can search from date ~ date_before)
+    { (specify by userID)
+        embedding (768, currently for testing only 3)
+        date
+        date_before
+        (can search from date ~ date_before)
+    }
 
 ### functions
 #### addNewUserInformation()
@@ -43,7 +47,7 @@ returns bool indicate success
 it will first use GetMessageMethod() to get number count of objects, then assign new object with id = count+1
 
 #### queryMessage
-currently onlny requires userID, will perform search based on userSetting
+currently only requires userID, will perform search based on userSetting
 returns a dict containing information of best match data
 
 #### GetUserSetting, GetGruopInfo
