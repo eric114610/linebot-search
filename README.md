@@ -61,3 +61,7 @@ https://search-linebot-search-3uafa4oepdfjx4tfk3emvsh5a4.aos.ap-northeast-3.on.a
 name: Eric, passwd:LiuLiuLeeLai123!
 
 can see and manually delete index
+
+#### remain indecies
+User: test-user3
+Group: stocks, sports, 

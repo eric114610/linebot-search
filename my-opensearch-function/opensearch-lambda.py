@@ -12,56 +12,16 @@ awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, servi
 
 host = 'https://search-linebot-search-3uafa4oepdfjx4tfk3emvsh5a4.aos.ap-northeast-3.on.aws' # The OpenSearch domain endpoint with https:// and without a trailing slash
 datatype = '_doc'
-# index = 'movies'
-index = 'test-index'
-# url = host + '/' + index + '/_search'
-# url_index = host + '/' + index
-# url_post = host + '/' + index + '/' + datatype + '/'
+
+## DON'T MODIFY ABOVE SETTING
+
+
 # Lambda execution starts here
 def lambda_handler(event, context):
 
-    # Put the user query into the query DSL for more accurate search results.
-    # Note that certain fields are boosted (^).
-    # query = {
-    #     "size": 25,
-    #     "query": {
-    #         "multi_match": {
-    #             "query": "thor",
-    #             "fields": ["title^4", "plot^2", "actors", "directors"]
-    #         }
-    #     }
-    # }
-  #   query = {
-  #   "size": 2,
-  #   "query": {
-  #     "knn": {
-  #       "item_vector": {
-  #         "vector": [
-  #           2, 4, 3
-  #         ],
-  #         "k": 10,
-  #         "filter": {
-  #           "bool": {
-  #             "must": [
-  #               {
-  #                 "range": {
-  #                   "rating": {
-  #                     "gte": 1,
-  #                     "lte": 10
-  #                   }
-  #                 }
-  #               }
-  #             ]
-  #           }
-  #         }
-  #       }
-  #     }
-  #   }
-  # }
-
-    # print(ast.literal_eval(event['queryStringParameters']['embedding']))
+    ## index decalring
+    # TODO: currently embedding only has dimensions of 3, change to 768 when need
     
-    # test_index = '{"settings": {"index": {"knn": true}},"mappings": {"properties": {"item_vector": {"type": "knn_vector","dimension": 3,"method": {"name": "hnsw","space_type": "l2","engine": "faiss"}}}}}'
     Gropu_index = """{
     "settings": {
        "index.knn": true
@@ -121,14 +81,7 @@ def lambda_handler(event, context):
     }
 }"""
     
-    # post_item = '{ "item_vector": [6.4, 3.4, 6.6], "size" : "small", "rating" : 9 }'
-    # print(post_item)
-    # # data_post = json.loads(post_item)
-    # post_item = '{"embedding": ' + str(event['queryStringParameters']['embedding']) + ', "message": "' + event['queryStringParameters']['message'] + '"}'
-    # print(post_item)
-    # data_post = json.loads(post_item)
-
-
+    ## Don't modify
     index = 'test-index'
     index = event['queryStringParameters']['q']
     url = host + '/' + index + '/_search'
@@ -137,6 +90,10 @@ def lambda_handler(event, context):
     
     # Elasticsearch 6.x requires an explicit Content-Type header
     headers = { "Content-Type": "application/json" }
+
+    ## main code for handling requests
+    ## params: type - request type, user - who post message, id - id for each object under index, q - index's name
+
     if(event['queryStringParameters']['type'] == "GetMessage"):
         if(event['queryStringParameters']['user'] == 'Admin'):
             query = {
@@ -244,6 +201,7 @@ def lambda_handler(event, context):
     # r = requests.put(url_index, auth=awsauth, headers=headers, data=json.dumps(data))
     # r = requests.post(url_post + '1', auth=awsauth, headers=headers, data=json.dumps(data))
 
+    ##DON'T MODIFY
     # Create the response and add some extra content to support CORS
     response = {
         "statusCode": 200,

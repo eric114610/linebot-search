@@ -12,6 +12,9 @@ service = 'es'
 
 apigatewayendpoint = 'https://o0p2k383h8.execute-api.ap-northeast-3.amazonaws.com/opensearch-api-test/'
 
+######## methods for sending request to lambda, don't directly call
+## TODO: error handling
+
 def GetMessageMethod(index, _embedding, _id, _date="2024-01-01 00:00:00", _user="Admin", _date_before="2025-12-31 11:59:59"):
     params = { "type": "GetMessage", "size": 25 , "q": index, "embedding": str(_embedding), "id": _id, "date": _date, "user": _user, "date_before": _date_before}
     r = requests.get(apigatewayendpoint, params)
@@ -63,7 +66,8 @@ def Putmethod(index, newIndexType):
         return {"embedding": f"Error, status code {r.status_code}\n Error message:\n {r.text}"}
 
 ###############################################################################################
-
+# functions for linebot, modify if you want
+# will have extra 1 second delay for syncronize
 
 async def addNewUserInformation(userID, _embedding=[0,0,0], _date="2024-01-01 00:00:00", _date_before="2025-12-31 11:59:59"):
     Putmethod(userID, "User")
@@ -123,7 +127,7 @@ async def GetGruopInfo(GruopID):
     return GetMessageMethod(GruopID, [0,0,0], 1)
 
 
-
+## example for async function
 
 async def testasync():
     c = await addNewGroup("drinks")
