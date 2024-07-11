@@ -69,3 +69,25 @@ can see and manually delete index
 #### remain indecies
 User: test-user3
 Group: stocks, sports, 
+
+## Run Linebot
+### Download 
+```bash=
+git clone https://github.com/eric114610/linebot-search.git
+cd linebot-search
+```
+### Environment
+python >= 3.0
+```bash=
+virtualenv linebot
+source linebot/bin/activate
+pip install -r requirements.txt
+```
+### Network
+Security : Requires a https domain name (noip and certbot)   
+Firewall : Open port 5000 and 443 for the flask app
+
+### Run
+```bash=
+python main.py
+```
